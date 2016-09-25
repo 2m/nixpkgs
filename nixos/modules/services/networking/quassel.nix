@@ -46,6 +46,13 @@ in
         '';
       };
 
+      sslCert = mkOption {
+        default = null;
+        description = ''
+          Path to the SSL certificate
+        '';
+      };
+
       user = mkOption {
         default = null;
         description = ''
@@ -88,7 +95,7 @@ in
 
         serviceConfig =
         {
-          ExecStart = "${quassel}/bin/quasselcore --listen=${concatStringsSep '','' cfg.interfaces} --port=${toString cfg.portNumber} --configdir=${cfg.dataDir}";
+          ExecStart = "${quassel}/bin/quasselcore --listen=${concatStringsSep '','' cfg.interfaces} --port=${toString cfg.portNumber} --configdir=${cfg.dataDir} ${optionalString cfg.sslCert != null "--ssl-cert=${cfg.sslCert}"}";
           User = user;
           PermissionsStartOnly = true;
         };
